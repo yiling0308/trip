@@ -557,52 +557,124 @@ body {
 }
 .tip-dot { color: var(--ocean); flex-shrink: 0; font-size: 0.7rem; margin-top: 3px; }
 
-/* ── EVENT EXPAND ── */
-.event-detail-panel {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+/* ── DETAIL MODAL ── */
+#detail-modal-veil {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(26,20,16,0.5);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
-.event-card.expanded .event-detail-panel { max-height: 600px; }
-.event-detail-inner {
-  padding: 12px 14px 14px 48px;
+@media(min-width:520px){
+  #detail-modal-veil { align-items: center; padding: 20px; }
+}
+#detail-modal-veil.open { opacity: 1; pointer-events: all; }
+
+.detail-modal-box {
+  background: var(--white);
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: translateY(30px);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+@media(min-width:520px){
+  .detail-modal-box { border-radius: 20px; }
+}
+#detail-modal-veil.open .detail-modal-box { transform: translateY(0); }
+
+.detail-modal-header {
+  padding: 20px 20px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.detail-modal-tag-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.detail-modal-time {
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+.detail-modal-title {
+  font-family: var(--f-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+  flex: 1;
+}
+.detail-modal-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sand-dark);
+  background: var(--sand);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.detail-modal-close:hover { background: var(--sand-dark); }
+.detail-modal-body {
+  padding: 16px 20px 28px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  border-top: 1px solid var(--sand-dark);
+  gap: 14px;
+}
+.detail-section-label {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 5px;
+}
+.detail-note-text {
+  font-size: 0.85rem;
+  color: var(--ink-mid);
+  line-height: 1.7;
 }
 .detail-map-link {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.76rem;
-  color: var(--ocean);
+  gap: 6px;
+  font-size: 0.82rem;
+  color: white;
   font-weight: 500;
   text-decoration: none;
-  padding: 5px 12px;
+  padding: 10px 18px;
   border-radius: 50px;
-  background: var(--ocean-pale);
-  border: 1px solid rgba(26,106,138,0.2);
+  background: var(--ocean);
   width: fit-content;
   transition: all 0.2s;
+  box-shadow: 0 2px 10px rgba(26,106,138,0.3);
 }
-.detail-map-link:hover { background: #b8e4f4; }
-.detail-note {
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  line-height: 1.6;
-}
-.detail-photos {
-  display: flex;
-  flex-wrap: wrap;
+.detail-map-link:hover { background: var(--ocean-light); transform: translateY(-1px); }
+.detail-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 6px;
 }
 .detail-photo-thumb {
-  width: 76px; height: 76px;
-  border-radius: 8px;
+  aspect-ratio: 1;
+  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
-  flex-shrink: 0;
   background: var(--sand);
 }
 .detail-photo-thumb img {
@@ -610,7 +682,11 @@ body {
   object-fit: cover;
   transition: transform 0.2s;
 }
-.detail-photo-thumb:hover img { transform: scale(1.08); }
+.detail-photo-thumb:hover img { transform: scale(1.06); }
+.detail-modal-divider {
+  height: 1px;
+  background: var(--sand-dark);
+}
 .photo-grid {
   display: flex;
   flex-wrap: wrap;
@@ -756,6 +832,11 @@ body {
 <!-- Modal -->
 <div class="modal-veil" id="modal-veil">
   <div class="modal-box" id="modal-box"></div>
+</div>
+
+<!-- Detail Modal -->
+<div id="detail-modal-veil">
+  <div class="detail-modal-box" id="detail-modal-box"></div>
 </div>
 
 <!-- Lightbox -->
@@ -987,7 +1068,7 @@ function render(){
           <button class="act-btn" onclick="event.stopPropagation();openEditModal('${ev.id}')" title="編輯">✏️</button>
           <button class="act-btn del" onclick="event.stopPropagation();openDeleteModal('${ev.id}')" title="刪除">🗑</button>
         </div>
-        <div class="event-card-top" onclick="toggleExpand(this.closest('.event-card'),'${ev.id}')">
+        <div class="event-card-top" onclick="openDetailModal('${ev.id}')">
           <div class="event-check" onclick="event.stopPropagation();toggleDone('${ev.id}')">
             <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
               <path d="M1 5L4.5 8.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -998,14 +1079,6 @@ function render(){
             <div class="event-title">${esc(ev.title)}</div>
             ${ev.note?`<div class="event-note-inline">${esc(ev.note)}</div>`:''}
             <span class="event-tag tag-${ev.tag}">${TAG_LABELS[ev.tag]||ev.tag}</span>
-          </div>
-          <div class="expand-arrow">▾</div>
-        </div>
-        <div class="event-detail-panel" id="detail-${ev.id}">
-          <div class="event-detail-inner">
-            ${ev.map_url?`<a href="${esc(ev.map_url)}" target="_blank" rel="noopener" class="detail-map-link" onclick="event.stopPropagation()">📍 Google Maps 導航</a>`:''}
-            <div class="detail-photos" id="photos-${ev.id}"></div>
-            ${!ev.map_url?`<div style="font-size:0.72rem;color:var(--ink-soft);font-style:italic;">尚無連結或照片，可在編輯中新增</div>`:''}
           </div>
         </div>`;
       list.appendChild(card);
@@ -1202,17 +1275,60 @@ function triggerPhotoUpload(eventId){
   if(input) input.click();
 }
 
-function toggleExpand(card, eventId){
-  const isOpen = card.classList.contains('expanded');
-  card.classList.toggle('expanded');
-  if(!isOpen) loadDetailPhotos(eventId);
+function openDetailModal(eventId){
+  const ev = events.find(e => e.id === eventId);
+  if(!ev) return;
+  const box = document.getElementById('detail-modal-box');
+  box.innerHTML = `
+    <div class="detail-modal-header">
+      <div style="flex:1;">
+        <div class="detail-modal-tag-time">
+          <span class="detail-modal-time">${ev.time}</span>
+          <span class="event-tag tag-${ev.tag}" style="margin-top:0;">${TAG_LABELS[ev.tag]||ev.tag}</span>
+        </div>
+        <div class="detail-modal-title">${esc(ev.title)}</div>
+      </div>
+      <button class="detail-modal-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="detail-modal-body" id="detail-modal-body-${eventId}">
+      ${ev.note ? `
+        <div>
+          <div class="detail-section-label">備註</div>
+          <div class="detail-note-text">${esc(ev.note)}</div>
+        </div>
+        <div class="detail-modal-divider"></div>` : ''}
+      ${ev.map_url ? `
+        <div>
+          <div class="detail-section-label">地點</div>
+          <a href="${esc(ev.map_url)}" target="_blank" rel="noopener" class="detail-map-link">📍 Google Maps 導航</a>
+        </div>` : ''}
+      <div>
+        <div class="detail-section-label">照片</div>
+        <div class="detail-photos-grid" id="detail-photos-${eventId}">
+          <div style="font-size:0.75rem;color:var(--ink-soft);font-style:italic;grid-column:1/-1;">載入中…</div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('detail-modal-veil').classList.add('open');
+  loadDetailPhotos(eventId);
 }
 
+function closeDetailModal(){
+  document.getElementById('detail-modal-veil').classList.remove('open');
+}
+
+document.getElementById('detail-modal-veil').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeDetailModal();
+});
+
 async function loadDetailPhotos(eventId){
-  const container = document.getElementById(`photos-${eventId}`);
+  const container = document.getElementById(`detail-photos-${eventId}`);
   if(!container) return;
   const { data, error } = await db.storage.from(BUCKET).list(eventId, { sortBy: { column: 'created_at', order: 'desc' } });
-  if(error || !data || !data.length){ container.innerHTML=''; return; }
+  if(error || !data || !data.length){
+    container.innerHTML = `<div style="font-size:0.75rem;color:var(--ink-soft);font-style:italic;grid-column:1/-1;">尚無照片，可在編輯中上傳</div>`;
+    return;
+  }
   container.innerHTML = data.map(f => {
     const url = db.storage.from(BUCKET).getPublicUrl(`${eventId}/${f.name}`).data.publicUrl;
     return `<div class="detail-photo-thumb" onclick="openLightbox('${url}')">
