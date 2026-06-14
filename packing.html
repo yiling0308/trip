@@ -8,86 +8,289 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --sand:#f5ede0;--sand-dark:#e8d9c4;--ocean:#1a6b8a;--ocean-light:#2a8aad;--ocean-pale:#d4eef6;
-  --sunset:#e8734a;--palm:#2d6a4f;--palm-light:#52b788;--gold:#c9952a;
-  --ink:#1a1410;--ink-mid:#4a3728;--ink-soft:#8a7060;--white:#fffdf8;
+  --f-display:'Playfair Display',serif;
+  --f-body:'Noto Sans TC',sans-serif;
+  --f-mono:'DM Mono',monospace;
   --radius:16px;--radius-sm:10px;
-  --f-display:'Playfair Display',serif;--f-body:'Noto Sans TC',sans-serif;--f-mono:'DM Mono',monospace;
 }
+
+/* ── TINA THEME ── */
+body.tina {
+  --bg: #fdf0f5;
+  --bg2: #fff5f8;
+  --card: #ffffff;
+  --border: #f2c8d8;
+  --border-hover: #e89ab5;
+  --accent: #c0577a;
+  --accent-light: #e8849e;
+  --accent-pale: #fce8ef;
+  --accent2: #e8b4c8;
+  --text: #3a1a26;
+  --text-mid: #7a4060;
+  --text-soft: #b07090;
+  --urgent: #e85a7a;
+  --check-line: #c0577a;
+  --progress-from: #e895b0;
+  --progress-to: #c0577a;
+  --tab-active-bg: linear-gradient(135deg,#e895b0,#c0577a);
+  --nav-bg: rgba(253,240,245,0.95);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ── ERIC THEME ── */
+body.eric {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --card: #1c2333;
+  --border: #30363d;
+  --border-hover: #58a6ff;
+  --accent: #58a6ff;
+  --accent-light: #79b8ff;
+  --accent-pale: #1c2d42;
+  --accent2: #388bfd;
+  --text: #e6edf3;
+  --text-mid: #b1bac4;
+  --text-soft: #6e7681;
+  --urgent: #f78166;
+  --check-line: #39d353;
+  --progress-from: #388bfd;
+  --progress-to: #58a6ff;
+  --tab-active-bg: linear-gradient(135deg,#388bfd,#58a6ff);
+  --nav-bg: rgba(13,17,23,0.95);
+  background: var(--bg);
+  color: var(--text);
+}
+
 html{scroll-behavior:smooth;}
-body{font-family:var(--f-body);background:var(--sand);color:var(--ink);min-height:100vh;padding-bottom:60px;}
+body{font-family:var(--f-body);min-height:100vh;padding-bottom:60px;transition:background 0.4s,color 0.4s;}
 
 /* NAV */
-.top-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(245,237,224,0.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--sand-dark);}
-.nav-back{display:flex;align-items:center;gap:6px;color:var(--ocean);text-decoration:none;font-size:0.82rem;font-weight:500;transition:gap 0.2s;}
-.nav-back:hover{gap:9px;}
-.nav-title{font-family:var(--f-display);font-size:1rem;font-weight:700;color:var(--ink);}
+.top-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;
+  background:var(--nav-bg);
+  backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid var(--border);
+  transition:background 0.4s,border-color 0.4s;
+}
+.nav-back{display:flex;align-items:center;gap:6px;color:var(--accent);text-decoration:none;font-size:0.82rem;font-weight:500;}
+.nav-title{font-family:var(--f-display);font-size:1rem;font-weight:700;color:var(--text);}
+.reset-btn{font-size:0.72rem;color:var(--text-soft);background:none;border:none;cursor:pointer;padding:4px 8px;}
+
+/* PERSON SWITCH */
+.person-switch{
+  max-width:680px;margin:20px auto 0;padding:0 20px;
+}
+.switch-row{
+  display:flex;gap:0;
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid var(--border);
+}
+.switch-btn{
+  flex:1;padding:0;border:none;cursor:pointer;
+  font-family:var(--f-body);font-size:0.9rem;font-weight:700;
+  transition:all 0.35s;
+  position:relative;overflow:hidden;
+}
+
+/* Tina switch btn */
+.switch-btn.tina{
+  background:#fce8ef;color:#c0577a;
+  padding:18px 12px;
+}
+.switch-btn.tina.active{
+  background:linear-gradient(135deg,#f9a8c0,#c0577a);
+  color:white;
+}
+body.tina .switch-btn.tina{
+  background:linear-gradient(135deg,#f9a8c0,#c0577a);
+  color:white;
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,0.15);
+}
+body.tina .switch-btn.eric{
+  background:#fff0f4;color:#c0a0b0;
+}
+
+/* Eric switch btn */
+.switch-btn.eric{
+  background:#1c2333;color:#58a6ff;
+  padding:18px 12px;
+}
+.switch-btn.eric.active{
+  background:linear-gradient(135deg,#388bfd,#1f6feb);
+  color:white;
+}
+body.eric .switch-btn.eric{
+  background:linear-gradient(135deg,#388bfd,#1f6feb);
+  color:white;
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,0.3);
+}
+body.eric .switch-btn.tina{
+  background:#161b22;color:#484f58;
+}
+
+.switch-name{
+  font-family:var(--f-display);
+  font-size:1.2rem;font-weight:700;
+  font-style:italic;
+  display:block;margin-bottom:2px;
+}
+.switch-sub{font-size:0.65rem;letter-spacing:0.1em;opacity:0.8;}
 
 /* HERO */
-.hero{padding:28px 20px 20px;max-width:680px;margin:0 auto;}
-.hero-eyebrow{font-family:var(--f-mono);font-size:0.65rem;letter-spacing:0.22em;color:var(--ink-soft);text-transform:uppercase;margin-bottom:8px;}
-.hero-title{font-family:var(--f-display);font-size:2rem;font-weight:700;color:var(--ink);line-height:1.15;}
-.hero-sub{font-size:0.82rem;color:var(--ink-soft);margin-top:6px;}
+.hero{padding:20px 20px 16px;max-width:680px;margin:0 auto;}
+.hero-eyebrow{
+  font-family:var(--f-mono);font-size:0.6rem;letter-spacing:0.22em;
+  color:var(--text-soft);text-transform:uppercase;margin-bottom:6px;
+}
+.hero-title{
+  font-family:var(--f-display);font-size:1.7rem;font-weight:700;
+  color:var(--text);line-height:1.2;
+}
+.hero-title em{font-style:italic;color:var(--accent);}
 
 /* PROGRESS */
-.progress-bar-wrap{max-width:680px;margin:0 auto 24px;padding:0 20px;}
-.progress-card{background:white;border-radius:var(--radius);padding:14px 18px;border:1.5px solid var(--sand-dark);}
+.progress-wrap{max-width:680px;margin:16px auto;padding:0 20px;}
+.progress-card{
+  border-radius:var(--radius);padding:14px 18px;
+  border:1px solid var(--border);
+  background:var(--card);
+  transition:all 0.4s;
+}
 .progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.progress-label{font-size:0.78rem;font-weight:500;color:var(--ink-mid);}
-.progress-count{font-family:var(--f-mono);font-size:0.78rem;color:var(--ocean);}
-.progress-bar{height:6px;background:var(--sand-dark);border-radius:50px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--ocean),var(--palm-light));border-radius:50px;transition:width 0.4s ease;}
+.progress-label{font-size:0.78rem;font-weight:500;color:var(--text-mid);}
+.progress-count{font-family:var(--f-mono);font-size:0.78rem;color:var(--accent);}
+.progress-bar{height:5px;background:var(--border);border-radius:50px;overflow:hidden;}
+.progress-fill{
+  height:100%;border-radius:50px;transition:width 0.4s ease;
+  background:linear-gradient(90deg,var(--progress-from),var(--progress-to));
+}
 
 /* MAIN */
 .main{max-width:680px;margin:0 auto;padding:0 20px;}
 
 /* CATEGORY */
-.category-block{margin-bottom:24px;}
-.category-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid var(--sand-dark);}
-.category-icon{font-size:1.2rem;}
-.category-name{font-family:var(--f-display);font-size:1rem;font-weight:700;color:var(--ink);}
-.category-count{font-family:var(--f-mono);font-size:0.65rem;color:var(--ink-soft);margin-left:auto;}
+.category-block{margin-bottom:20px;}
+.category-header{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.category-icon{font-size:1.1rem;}
+.category-name{
+  font-family:var(--f-display);font-size:0.95rem;font-weight:700;
+  color:var(--text);
+}
+.category-count{
+  font-family:var(--f-mono);font-size:0.6rem;
+  color:var(--text-soft);margin-left:auto;
+}
 
 /* ITEM */
-.pack-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:white;border-radius:var(--radius-sm);margin-bottom:6px;border:1.5px solid transparent;transition:all 0.2s;cursor:pointer;}
-.pack-item:hover{border-color:var(--ocean-pale);box-shadow:0 2px 8px rgba(26,106,138,0.06);}
-.pack-item.checked{background:#f8faf5;border-color:#d8edd0;}
-.pack-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--sand-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;background:white;}
-.pack-item.checked .pack-check{background:var(--palm-light);border-color:var(--palm-light);}
+.pack-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:11px 14px;
+  background:var(--card);
+  border-radius:var(--radius-sm);
+  margin-bottom:6px;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.pack-item:hover{border-color:var(--border-hover);}
+.pack-item.checked{
+  opacity:0.65;
+  border-color:var(--border);
+}
+body.tina .pack-item.checked{background:#fff8fa;}
+body.eric .pack-item.checked{background:#161b22;}
+
+.pack-check{
+  width:20px;height:20px;border-radius:5px;
+  border:1.5px solid var(--border);
+  flex-shrink:0;margin-top:1px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;background:transparent;
+}
+.pack-item.checked .pack-check{
+  background:var(--accent);border-color:var(--accent);
+}
 .pack-check svg{opacity:0;transition:opacity 0.15s;}
 .pack-item.checked .pack-check svg{opacity:1;}
-.pack-item.checked .pack-label{text-decoration:line-through;color:var(--ink-soft);}
-.pack-label{flex:1;font-size:0.88rem;color:var(--ink);line-height:1.4;}
-.pack-note{font-size:0.72rem;color:var(--ink-soft);margin-top:1px;}
-.pack-urgent{width:6px;height:6px;border-radius:50%;background:var(--sunset);flex-shrink:0;}
+.pack-item.checked .pack-label{text-decoration:line-through;color:var(--text-soft);}
+
+.pack-label{flex:1;font-size:0.88rem;color:var(--text);line-height:1.4;}
+.pack-note{font-size:0.7rem;color:var(--text-soft);margin-top:2px;}
+.pack-urgent{width:5px;height:5px;border-radius:50%;background:var(--urgent);flex-shrink:0;margin-top:8px;}
 
 /* ADD */
 .add-item-row{display:flex;gap:8px;margin-top:8px;}
-.add-item-input{flex:1;padding:9px 12px;border:1.5px solid var(--sand-dark);border-radius:var(--radius-sm);font-family:var(--f-body);font-size:0.85rem;background:white;outline:none;transition:border-color 0.2s;}
-.add-item-input:focus{border-color:var(--ocean-light);}
-.add-item-btn{padding:9px 14px;background:var(--ocean);color:white;border:none;border-radius:var(--radius-sm);font-size:0.82rem;font-weight:500;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
-.add-item-btn:hover{background:var(--ocean-light);}
+.add-item-input{
+  flex:1;padding:9px 12px;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-family:var(--f-body);font-size:0.82rem;
+  background:var(--bg2);color:var(--text);outline:none;
+  transition:border-color 0.2s;
+}
+.add-item-input::placeholder{color:var(--text-soft);}
+.add-item-input:focus{border-color:var(--accent);}
+.add-item-btn{
+  padding:9px 14px;color:white;border:none;
+  border-radius:var(--radius-sm);font-size:0.8rem;font-weight:500;
+  cursor:pointer;white-space:nowrap;
+  background:var(--accent);transition:opacity 0.2s;
+}
+.add-item-btn:hover{opacity:0.85;}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:white;padding:9px 20px;border-radius:50px;font-size:0.8rem;z-index:300;opacity:0;pointer-events:none;transition:all 0.3s;white-space:nowrap;}
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--card);color:var(--text);
+  border:1px solid var(--border);
+  padding:9px 20px;border-radius:50px;
+  font-size:0.8rem;z-index:300;
+  opacity:0;pointer-events:none;
+  transition:all 0.3s;white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
-<body>
+<body class="tina">
 
 <nav class="top-nav">
   <a href="index.html" class="nav-back">← 返回行程</a>
   <span class="nav-title">🧳 打包清單</span>
-  <button onclick="resetAll()" style="font-size:0.72rem;color:var(--ink-soft);background:none;border:none;cursor:pointer;">全部重置</button>
+  <button class="reset-btn" onclick="resetCurrent()">重置</button>
 </nav>
 
-<div class="hero">
-  <div class="hero-eyebrow">· 出發前確認 ·</div>
-  <h1 class="hero-title">行前打包清單</h1>
-  <div class="hero-sub">勾選代表已放入行李，關閉頁面也不會消失</div>
+<!-- Person Switch -->
+<div class="person-switch">
+  <div class="switch-row">
+    <button class="switch-btn tina" onclick="setPerson('tina')">
+      <span class="switch-name">Tina</span>
+      <span class="switch-sub">🌸 粉嫩旅行家</span>
+    </button>
+    <button class="switch-btn eric" onclick="setPerson('eric')">
+      <span class="switch-name">Eric</span>
+      <span class="switch-sub">🌊 深空探索者</span>
+    </button>
+  </div>
 </div>
 
-<div class="progress-bar-wrap">
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-eyebrow">· 出發前確認 ·</div>
+  <h1 class="hero-title" id="hero-title"><em>Tina</em> 的行李</h1>
+</div>
+
+<!-- Progress -->
+<div class="progress-wrap">
   <div class="progress-card">
     <div class="progress-row">
       <span class="progress-label">整體進度</span>
@@ -98,136 +301,133 @@ body{font-family:var(--f-body);background:var(--sand);color:var(--ink);min-heigh
 </div>
 
 <div class="main" id="lists-container"></div>
-
 <div class="toast" id="toast"></div>
 
 <script>
 const CATEGORIES = [
-  {
-    id:'docs', icon:'📄', name:'證件文件',
-    items:[
-      {id:'passport',label:'護照',note:'確認有效期限 6 個月以上',urgent:true},
-      {id:'ticket',label:'電子機票',note:'IT551 / IT552',urgent:true},
-      {id:'hotel',label:'訂房確認單',note:'Haian / 會安 / 美溪沙灘',urgent:true},
-      {id:'insurance',label:'旅遊保險單',urgent:false},
-      {id:'cash',label:'越南盾現金',note:'建議準備 200 萬盾以上',urgent:true},
-      {id:'card',label:'信用卡',note:'確認有開通海外刷卡',urgent:false},
-    ]
-  },
-  {
-    id:'clothes', icon:'👕', name:'衣物',
-    items:[
-      {id:'tshirt',label:'T恤 × 5',urgent:false},
-      {id:'pants',label:'短褲 × 3',urgent:false},
-      {id:'swimwear',label:'泳衣 / 泳褲',note:'去海灘必備',urgent:false},
-      {id:'sandals',label:'涼鞋',urgent:false},
-      {id:'sneakers',label:'運動鞋',note:'巴拿山要走很多路',urgent:false},
-      {id:'jacket',label:'薄外套',note:'室內冷氣很強',urgent:false},
-      {id:'hat',label:'帽子',note:'防曬必備',urgent:true},
-      {id:'underwear',label:'內衣褲 × 5',urgent:false},
-      {id:'socks',label:'襪子 × 3',urgent:false},
-    ]
-  },
-  {
-    id:'electronics', icon:'🔌', name:'3C 電子',
-    items:[
-      {id:'phone',label:'手機',urgent:true},
-      {id:'charger',label:'充電器',urgent:true},
-      {id:'powerbank',label:'行動電源',urgent:false},
-      {id:'camera',label:'運動相機',urgent:false},
-      {id:'memcard',label:'備用記憶卡',note:'多帶幾張',urgent:true},
-      {id:'adapter',label:'萬用轉接頭',urgent:false},
-      {id:'earphone',label:'耳機',urgent:false},
-    ]
-  },
-  {
-    id:'toiletries', icon:'🧴', name:'盥洗保養',
-    items:[
-      {id:'sunscreen',label:'防曬乳 SPF50+',note:'每隔兩小時補擦',urgent:true},
-      {id:'toothbrush',label:'牙刷牙膏',urgent:false},
-      {id:'shampoo',label:'洗髮精',urgent:false},
-      {id:'bodywash',label:'沐浴乳',urgent:false},
-      {id:'skincare',label:'保養品',urgent:false},
-      {id:'deodorant',label:'止汗噴霧',urgent:false},
-      {id:'tissue',label:'隨身面紙',note:'廁所不一定有衛生紙',urgent:true},
-      {id:'wetwipes',label:'濕紙巾',urgent:false},
-    ]
-  },
-  {
-    id:'medicine', icon:'💊', name:'藥品',
-    items:[
-      {id:'stomach',label:'腸胃藥',note:'吃海鮮備用',urgent:true},
-      {id:'diarrhea',label:'止瀉藥',urgent:true},
-      {id:'painkiller',label:'止痛藥',urgent:false},
-      {id:'bandaid',label:'OK繃',urgent:false},
-      {id:'mosquito',label:'防蚊液',note:'戶外必備',urgent:true},
-      {id:'antihistamine',label:'抗過敏藥',urgent:false},
-    ]
-  },
-  {
-    id:'misc', icon:'🎒', name:'雜物',
-    items:[
-      {id:'umbrella',label:'摺疊雨傘',note:'午後可能有陣雨',urgent:true},
-      {id:'sunglasses',label:'太陽眼鏡',urgent:false},
-      {id:'waterbottle',label:'水壺',urgent:false},
-      {id:'bag',label:'輕便後背包',note:'day trip用',urgent:false},
-      {id:'ziplock',label:'夾鏈袋',note:'防水/分裝用',urgent:false},
-      {id:'laundry',label:'洗衣袋',urgent:false},
-      {id:'grab',label:'下載 Grab App',note:'叫車必備',urgent:true},
-    ]
-  },
+  { id:'docs', icon:'📄', name:'證件文件', items:[
+    {id:'passport',label:'護照',note:'確認有效期限 6 個月以上',urgent:true},
+    {id:'ticket',label:'電子機票',note:'IT551 / IT552',urgent:true},
+    {id:'hotel',label:'訂房確認單',urgent:false},
+    {id:'insurance',label:'旅遊保險單',urgent:false},
+    {id:'cash',label:'越南盾現金',note:'建議準備 200 萬盾以上',urgent:true},
+    {id:'card',label:'信用卡',note:'確認開通海外刷卡',urgent:false},
+  ]},
+  { id:'clothes', icon:'👕', name:'衣物', items:[
+    {id:'tshirt',label:'T恤 × 5',urgent:false},
+    {id:'pants',label:'短褲 × 3',urgent:false},
+    {id:'swimwear',label:'泳衣 / 泳褲',note:'去海灘必備',urgent:false},
+    {id:'sandals',label:'涼鞋',urgent:false},
+    {id:'sneakers',label:'運動鞋',note:'巴拿山要走很多路',urgent:false},
+    {id:'jacket',label:'薄外套',note:'室內冷氣很強',urgent:false},
+    {id:'hat',label:'帽子',note:'防曬必備',urgent:true},
+    {id:'underwear',label:'內衣褲 × 5',urgent:false},
+    {id:'socks',label:'襪子 × 3',urgent:false},
+  ]},
+  { id:'electronics', icon:'🔌', name:'3C 電子', items:[
+    {id:'phone',label:'手機',urgent:true},
+    {id:'charger',label:'充電器',urgent:true},
+    {id:'powerbank',label:'行動電源',urgent:false},
+    {id:'camera',label:'運動相機',urgent:false},
+    {id:'memcard',label:'備用記憶卡',note:'多帶幾張',urgent:true},
+    {id:'adapter',label:'萬用轉接頭',urgent:false},
+    {id:'earphone',label:'耳機',urgent:false},
+  ]},
+  { id:'toiletries', icon:'🧴', name:'盥洗保養', items:[
+    {id:'sunscreen',label:'防曬乳 SPF50+',note:'每隔兩小時補擦',urgent:true},
+    {id:'toothbrush',label:'牙刷牙膏',urgent:false},
+    {id:'shampoo',label:'洗髮精',urgent:false},
+    {id:'bodywash',label:'沐浴乳',urgent:false},
+    {id:'skincare',label:'保養品',urgent:false},
+    {id:'tissue',label:'隨身面紙',note:'廁所不一定有衛生紙',urgent:true},
+    {id:'wetwipes',label:'濕紙巾',urgent:false},
+  ]},
+  { id:'medicine', icon:'💊', name:'藥品', items:[
+    {id:'stomach',label:'腸胃藥',note:'吃海鮮備用',urgent:true},
+    {id:'diarrhea',label:'止瀉藥',urgent:true},
+    {id:'painkiller',label:'止痛藥',urgent:false},
+    {id:'bandaid',label:'OK繃',urgent:false},
+    {id:'mosquito',label:'防蚊液',note:'戶外必備',urgent:true},
+    {id:'antihistamine',label:'抗過敏藥',urgent:false},
+  ]},
+  { id:'misc', icon:'🎒', name:'雜物', items:[
+    {id:'umbrella',label:'摺疊雨傘',note:'午後可能有陣雨',urgent:true},
+    {id:'sunglasses',label:'太陽眼鏡',urgent:false},
+    {id:'waterbottle',label:'水壺',urgent:false},
+    {id:'bag',label:'輕便後背包',note:'day trip 用',urgent:false},
+    {id:'ziplock',label:'夾鏈袋',note:'防水/分裝用',urgent:false},
+    {id:'grab',label:'下載 Grab App',note:'叫車必備',urgent:true},
+  ]},
 ];
 
-// Load state
-let checked = JSON.parse(localStorage.getItem('packing_checked') || '{}');
+let currentPerson = 'tina';
 
-function save(){ localStorage.setItem('packing_checked', JSON.stringify(checked)); }
+function getChecked(p){ return JSON.parse(localStorage.getItem(`packing_${p}`) || '{}'); }
+function saveChecked(p, obj){ localStorage.setItem(`packing_${p}`, JSON.stringify(obj)); }
+function getCustom(p){ return JSON.parse(localStorage.getItem(`packing_custom_${p}`) || '[]'); }
+function saveCustom(p, arr){ localStorage.setItem(`packing_custom_${p}`, JSON.stringify(arr)); }
 
-function toggleItem(id){
-  checked[id] = !checked[id];
-  save();
+function setPerson(p){
+  currentPerson = p;
+  document.body.className = p;
+  document.getElementById('hero-title').innerHTML = `<em>${p==='tina'?'Tina':'Eric'}</em> 的行李`;
   renderAll();
-  toast(checked[id] ? '✅ 已勾選' : '↩️ 取消勾選');
 }
 
-function resetAll(){
-  if(!confirm('確定重置所有勾選？')) return;
-  checked = {};
-  save();
+function toggleItem(id){
+  const checked = getChecked(currentPerson);
+  checked[id] = !checked[id];
+  saveChecked(currentPerson, checked);
   renderAll();
-  toast('🔄 已全部重置');
+  toast(checked[id] ? '✅ 已勾選' : '↩️ 取消');
+}
+
+function resetCurrent(){
+  const name = currentPerson === 'tina' ? 'Tina' : 'Eric';
+  if(!confirm(`確定重置 ${name} 的所有勾選？`)) return;
+  saveChecked(currentPerson, {});
+  renderAll();
+  toast('🔄 已重置');
 }
 
 function updateProgress(){
-  const all = CATEGORIES.flatMap(c=>c.items);
-  const done = all.filter(i=>checked[i.id]).length;
-  document.getElementById('prog-count').textContent = `${done} / ${all.length}`;
-  document.getElementById('prog-fill').style.width = `${all.length ? (done/all.length*100) : 0}%`;
+  const p = currentPerson;
+  const checked = getChecked(p);
+  const custom = getCustom(p);
+  const allIds = CATEGORIES.flatMap(c => c.items.map(i=>i.id)).concat(custom.map(i=>i.id));
+  const done = allIds.filter(id => checked[id]).length;
+  document.getElementById('prog-count').textContent = `${done} / ${allIds.length}`;
+  document.getElementById('prog-fill').style.width = `${allIds.length?(done/allIds.length*100):0}%`;
 }
 
 function renderAll(){
-  const container = document.getElementById('lists-container');
-  container.innerHTML = CATEGORIES.map(cat => {
-    const doneCount = cat.items.filter(i=>checked[i.id]).length;
+  updateProgress();
+  const p = currentPerson;
+  const checked = getChecked(p);
+  const custom = getCustom(p);
+
+  document.getElementById('lists-container').innerHTML = CATEGORIES.map(cat => {
+    const allItems = [...cat.items, ...custom.filter(c=>c.cat===cat.id)];
+    const done = allItems.filter(i=>checked[i.id]).length;
     return `
     <div class="category-block">
       <div class="category-header">
         <span class="category-icon">${cat.icon}</span>
         <span class="category-name">${cat.name}</span>
-        <span class="category-count">${doneCount}/${cat.items.length}</span>
+        <span class="category-count">${done}/${allItems.length}</span>
       </div>
-      ${cat.items.map(item=>`
+      ${allItems.map(item=>`
         <div class="pack-item ${checked[item.id]?'checked':''}" onclick="toggleItem('${item.id}')">
           <div class="pack-check">
             <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
-              <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
           <div class="pack-label">
             ${item.label}
             ${item.note?`<div class="pack-note">${item.note}</div>`:''}
           </div>
-          ${item.urgent && !checked[item.id] ? '<div class="pack-urgent"></div>' : ''}
+          ${item.urgent&&!checked[item.id]?'<div class="pack-urgent"></div>':''}
         </div>`).join('')}
       <div class="add-item-row">
         <input class="add-item-input" id="add-${cat.id}" placeholder="新增項目…" onkeydown="if(event.key==='Enter')addItem('${cat.id}')">
@@ -235,16 +435,15 @@ function renderAll(){
       </div>
     </div>`;
   }).join('');
-  updateProgress();
 }
 
 function addItem(catId){
   const input = document.getElementById(`add-${catId}`);
   const val = input.value.trim();
   if(!val) return;
-  const cat = CATEGORIES.find(c=>c.id===catId);
-  const id = catId + '_' + Date.now();
-  cat.items.push({id, label:val, urgent:false});
+  const custom = getCustom(currentPerson);
+  custom.push({id:`custom_${catId}_${Date.now()}`,label:val,cat:catId,urgent:false});
+  saveCustom(currentPerson, custom);
   input.value = '';
   renderAll();
   toast('➕ 已新增');
@@ -255,7 +454,7 @@ function toast(msg){
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toast._t);
-  toast._t = setTimeout(()=>el.classList.remove('show'), 2200);
+  toast._t = setTimeout(()=>el.classList.remove('show'),2200);
 }
 
 renderAll();
