@@ -758,8 +758,134 @@ body {
   background: none; border: none; line-height: 1;
 }
 
-/* Divider */
-.section-div {
+/* ── CURRENCY CONVERTER ── */
+.currency-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  border: 1.5px solid var(--sand-dark);
+}
+.currency-title {
+  font-family: var(--f-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.currency-rate-badge {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  color: var(--ink-soft);
+  background: var(--sand);
+  padding: 3px 8px;
+  border-radius: 50px;
+  letter-spacing: 0.05em;
+}
+.currency-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.currency-tab {
+  flex: 1;
+  padding: 7px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--sand-dark);
+  background: var(--sand);
+  color: var(--ink-soft);
+  font-family: var(--f-body);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.currency-tab.active {
+  background: var(--ocean);
+  border-color: var(--ocean);
+  color: white;
+}
+.currency-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.currency-input-wrap {
+  flex: 1;
+  position: relative;
+}
+.currency-symbol {
+  position: absolute;
+  left: 12px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--f-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  pointer-events: none;
+}
+.currency-input {
+  width: 100%;
+  padding: 11px 12px 11px 28px;
+  border: 1.5px solid var(--sand-dark);
+  border-radius: var(--radius-sm);
+  font-family: var(--f-mono);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--sand);
+  outline: none;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.currency-input:focus { border-color: var(--ocean-light); background: white; }
+.currency-result-card {
+  background: linear-gradient(135deg, var(--ocean), var(--ocean-light));
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+.currency-result-label {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.currency-result-value {
+  font-family: var(--f-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.02em;
+}
+.currency-result-unit {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.75);
+  margin-top: 3px;
+}
+.currency-quick-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.currency-quick-btn {
+  padding: 4px 10px;
+  border-radius: 50px;
+  border: 1.5px solid var(--sand-dark);
+  background: white;
+  color: var(--ink-soft);
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.currency-quick-btn:hover { border-color: var(--ocean-light); color: var(--ocean); background: var(--ocean-pale); }
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--sand-dark), transparent);
   margin: 28px 0;
@@ -822,6 +948,30 @@ body {
       <div class="tip-item"><span class="tip-dot">▸</span>廁所不一定有衛生紙，建議隨身攜帶小包面紙</div>
       <div class="tip-item"><span class="tip-dot">▸</span>插座為兩孔圓頭，台灣電器可直接使用（電壓相同 220V）</div>
     </div>
+  </div>
+
+  <!-- Currency Converter -->
+  <div class="currency-section">
+    <div class="currency-title">
+      💱 即時匯率換算
+      <span class="currency-rate-badge" id="rate-badge">匯率載入中…</span>
+    </div>
+    <div class="currency-tabs">
+      <button class="currency-tab active" id="tab-vnd" onclick="setMode('vnd')">越南盾 → 台幣</button>
+      <button class="currency-tab" id="tab-twd" onclick="setMode('twd')">台幣 → 越南盾</button>
+    </div>
+    <div class="currency-input-row">
+      <div class="currency-input-wrap">
+        <span class="currency-symbol" id="input-symbol">₫</span>
+        <input class="currency-input" id="currency-input" type="number" placeholder="輸入金額" oninput="convert()">
+      </div>
+    </div>
+    <div class="currency-result-card">
+      <div class="currency-result-label" id="result-label">越南盾 → 台幣</div>
+      <div class="currency-result-value" id="result-value">—</div>
+      <div class="currency-result-unit" id="result-unit">請輸入金額</div>
+    </div>
+    <div class="currency-quick-btns" id="quick-btns"></div>
   </div>
 
   <!-- Days container -->
@@ -1354,9 +1504,85 @@ async function handlePhotoInput(eventId, input){
   input.value = '';
 }
 
+// ══ CURRENCY CONVERTER ══
+let vndToTwd = null; // 即時匯率
+let currencyMode = 'vnd'; // vnd→twd or twd→vnd
+
+const VND_QUICK = [50000, 100000, 200000, 500000, 1000000];
+const TWD_QUICK = [100, 500, 1000, 2000, 5000];
+
+async function loadExchangeRate(){
+  try {
+    // 免費 API：exchangerate-api
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/TWD');
+    const data = await res.json();
+    const rate = data.rates['VND'];
+    if(rate){
+      vndToTwd = 1 / rate; // 1 VND = ? TWD
+      const display = (1 / vndToTwd).toFixed(0);
+      document.getElementById('rate-badge').textContent = `1 TWD ≈ ${Number(display).toLocaleString()} VND`;
+      renderQuickBtns();
+      convert();
+    }
+  } catch(e) {
+    // Fallback 固定匯率
+    vndToTwd = 1 / 780;
+    document.getElementById('rate-badge').textContent = '1 TWD ≈ 780 VND（參考值）';
+    renderQuickBtns();
+  }
+}
+
+function setMode(mode){
+  currencyMode = mode;
+  document.getElementById('tab-vnd').classList.toggle('active', mode==='vnd');
+  document.getElementById('tab-twd').classList.toggle('active', mode==='twd');
+  document.getElementById('input-symbol').textContent = mode==='vnd' ? '₫' : 'NT$';
+  document.getElementById('currency-input').value = '';
+  document.getElementById('result-value').textContent = '—';
+  document.getElementById('result-unit').textContent = '請輸入金額';
+  renderQuickBtns();
+  convert();
+}
+
+function renderQuickBtns(){
+  const btns = document.getElementById('quick-btns');
+  const list = currencyMode==='vnd' ? VND_QUICK : TWD_QUICK;
+  const sym = currencyMode==='vnd' ? '₫' : 'NT$';
+  btns.innerHTML = list.map(v => `
+    <button class="currency-quick-btn" onclick="setQuick(${v})">
+      ${sym}${v >= 1000000 ? (v/1000000)+'M' : v >= 1000 ? (v/1000)+'K' : v}
+    </button>`).join('');
+}
+
+function setQuick(val){
+  document.getElementById('currency-input').value = val;
+  convert();
+}
+
+function convert(){
+  const input = parseFloat(document.getElementById('currency-input').value);
+  if(!input || !vndToTwd){
+    document.getElementById('result-value').textContent = '—';
+    document.getElementById('result-unit').textContent = vndToTwd ? '請輸入金額' : '匯率載入中…';
+    return;
+  }
+  if(currencyMode === 'vnd'){
+    const twd = input * vndToTwd;
+    document.getElementById('result-label').textContent = '越南盾 → 新台幣';
+    document.getElementById('result-value').textContent = 'NT$ ' + twd.toLocaleString('zh-TW', {minimumFractionDigits:0, maximumFractionDigits:1});
+    document.getElementById('result-unit').textContent = `₫${input.toLocaleString()} VND`;
+  } else {
+    const vnd = input / vndToTwd;
+    document.getElementById('result-label').textContent = '新台幣 → 越南盾';
+    document.getElementById('result-value').textContent = '₫ ' + Math.round(vnd).toLocaleString();
+    document.getElementById('result-unit').textContent = `NT$${input.toLocaleString()} TWD`;
+  }
+}
+
 // ══ INIT ══
 updateCountdown();
 setInterval(updateCountdown, 30000);
+loadExchangeRate();
 loadEvents();
 </script>
 </body>
